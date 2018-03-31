@@ -13,9 +13,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 
-
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
+		
+		// init database
+		let dbPath = HSUtils.getDocumentsPath() + "/" + dbName
+		print("DB path: " + dbPath)
+		dbManager = DBManager(dbPath: dbPath)
+		
 		return true
 	}
 
