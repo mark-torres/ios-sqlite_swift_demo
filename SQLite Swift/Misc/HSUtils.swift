@@ -22,4 +22,9 @@ class HSUtils {
 		return docsPath
 	}
 	
+	static func getAppVersionName() -> String {
+		let version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String ?? "V"
+		let build = Bundle.main.infoDictionary!["CFBundleVersion"] as? String ?? "B"
+		return version + "_" + build
+	}
 }

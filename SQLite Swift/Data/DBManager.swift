@@ -13,10 +13,12 @@ struct TableNames {
 	static let Contacts = "contacts"
 }
 
+let primaryColumnName = "row_id"
+
 class DBManager {
 	
 	var db: Connection
-	
+
 	enum ColumnType {
 		case integer
 		case text
@@ -41,7 +43,7 @@ class DBManager {
 	This function creates a table with the primary column only
 	*/
 	func initTable(_ table: Table) -> Bool {
-		let rowId = Expression<Int64>("row_id")
+		let rowId = Expression<Int64>(primaryColumnName)
 		do {
 			try db.run(table.create(temporary: false, ifNotExists: true, withoutRowid: false, block: { (tb) in
 				tb.column(rowId, primaryKey: PrimaryKey.autoincrement)
@@ -56,29 +58,47 @@ class DBManager {
 	/**
 	This function adds columns to a table
 	*/
-	func completeTable(_ table: Table, withColumns columns: [ColumnDefinition]) -> Bool {
+	func completeTable(_ tableName: String, withColumns columns: [ColumnDefinition]) -> Bool {
 		var query = ""
+		let table = Table(tableName)
+		let currentColumns = getColumnNames(fromTable: tableName)
 		for col in columns {
-			switch col.type {
-			case ColumnType.integer:
-				let c = Expression<Int64>(col.name)
-				query = table.addColumn(c, defaultValue: 0)
-				break
-			case ColumnType.real:
-				let c = Expression<Double>(col.name)
-				query = table.addColumn(c, defaultValue: 0.0)
-				break
-			default:
-				let c = Expression<String>(col.name)
-				query = table.addColumn(c, defaultValue: " ")
-			}
-			do {
-				try db.run(query)
-			} catch (let error) {
-				print(error.localizedDescription)
+			if !currentColumns.contains(col.name) {
+				switch col.type {
+				case ColumnType.integer:
+					let c = Expression<Int64>(col.name)
+					query = table.addColumn(c, defaultValue: 0)
+					break
+				case ColumnType.real:
+					let c = Expression<Double>(col.name)
+					query = table.addColumn(c, defaultValue: 0.0)
+					break
+				default:
+					let c = Expression<String>(col.name)
+					query = table.addColumn(c, defaultValue: " ")
+				}
+				do {
+					try db.run(query)
+				} catch (let error) {
+					print(error.localizedDescription)
+				}
 			}
 		}
 		return true
+	}
+	
+	/**
+	This function gets an array of column names from a table
+	*/
+	func getColumnNames(fromTable tableName: String) -> [String] {
+		var columnNames = [String]()
+		let sql = "PRAGMA table_info(" + tableName + ")"
+		for row in try! db.prepare(sql) {
+			if let colName = row[1] as? String {
+				columnNames.append(colName)
+			}
+		}
+		return columnNames
 	}
 	
 	/**

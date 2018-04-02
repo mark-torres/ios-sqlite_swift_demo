@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2942241010766DE309DB1563 /* Pods_SQLite_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13EE8621719261043ABDBC25 /* Pods_SQLite_Swift.framework */; };
+		A9117A992072944800F5E9D1 /* ContactFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9117A982072944800F5E9D1 /* ContactFormViewController.swift */; };
 		A9A06364206ECE4500196D07 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A06363206ECE4500196D07 /* ContactsViewController.swift */; };
 		A9A06366206EF56B00196D07 /* DBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A06365206EF56B00196D07 /* DBManager.swift */; };
 		A9A06369206EF5BF00196D07 /* HSUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A06368206EF5BF00196D07 /* HSUtils.swift */; };
@@ -26,6 +27,7 @@
 		0533BD06285A16E9E9E9AE03 /* Pods-SQLite Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SQLite Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-SQLite Swift/Pods-SQLite Swift.release.xcconfig"; sourceTree = "<group>"; };
 		13EE8621719261043ABDBC25 /* Pods_SQLite_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SQLite_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		488E692E2DD3652DD5D3D5B2 /* Pods-SQLite Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SQLite Swift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SQLite Swift/Pods-SQLite Swift.debug.xcconfig"; sourceTree = "<group>"; };
+		A9117A982072944800F5E9D1 /* ContactFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactFormViewController.swift; sourceTree = "<group>"; };
 		A9A06363206ECE4500196D07 /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		A9A06365206EF56B00196D07 /* DBManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBManager.swift; sourceTree = "<group>"; };
 		A9A06368206EF5BF00196D07 /* HSUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HSUtils.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				A9A06363206ECE4500196D07 /* ContactsViewController.swift */,
+				A9117A982072944800F5E9D1 /* ContactFormViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9117A992072944800F5E9D1 /* ContactFormViewController.swift in Sources */,
 				A9A06371206F183400196D07 /* DBContacts.swift in Sources */,
 				A9A0636B206EF5C800196D07 /* DBSchema.swift in Sources */,
 				A9C83A742069BF9100447EBF /* ViewController.swift in Sources */,
