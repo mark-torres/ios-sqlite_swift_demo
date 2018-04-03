@@ -23,7 +23,7 @@ class DBContactData {
 	}
 }
 
-struct DBContactSchema {
+struct DBContactsSchema {
 	static let table = Table(TableNames.Contacts)
 	static let rowId = Expression<Int64>(primaryColumnName)
 	static let name = Expression<String>("name")
@@ -68,25 +68,32 @@ extension DBManager {
 	*/
 	func getAllContacts() -> [DBContactData] {
 		var contacts = [DBContactData]()
-		for row in try! db.prepare(DBContactSchema.table) {
+		guard let rows = try? db.prepare(DBContactsSchema.table) else {
+			print("getAllContacts: Error getting data from table: " + TableNames.Contacts)
+			return contacts
+		}
+		for row in rows {
 			let contact = DBContactData()
-			contact.rowId = row[DBContactSchema.rowId]
-			contact.name = row[DBContactSchema.name]
-			contact.email = row[DBContactSchema.email]
-			contact.age = row[DBContactSchema.age]
+			contact.rowId = row[DBContactsSchema.rowId]
+			contact.name = row[DBContactsSchema.name]
+			contact.email = row[DBContactsSchema.email]
+			contact.age = row[DBContactsSchema.age]
 			contacts.append(contact)
 		}
 		return contacts
 	}
 	
 	func getContact(byId rowId: Int64) -> DBContactData {
-		var contact: DBContactData!
-		for row in try! db.prepare(DBContactSchema.table.filter(DBContactSchema.rowId == rowId).limit(1)) {
-			contact = DBContactData()
-			contact.rowId = row[DBContactSchema.rowId]
-			contact.name = row[DBContactSchema.name]
-			contact.email = row[DBContactSchema.email]
-			contact.age = row[DBContactSchema.age]
+		var contact = DBContactData()
+		guard let rows = try? db.prepare(DBContactsSchema.table.filter(DBContactsSchema.rowId == rowId).limit(1)) else {
+			print("getContact: Error getting data from table: " + TableNames.Contacts)
+			return contact
+		}
+		for row in rows {
+			contact.rowId = row[DBContactsSchema.rowId]
+			contact.name = row[DBContactsSchema.name]
+			contact.email = row[DBContactsSchema.email]
+			contact.age = row[DBContactsSchema.age]
 		}
 		return contact
 	}
@@ -94,27 +101,37 @@ extension DBManager {
 	func saveContact(_ contact: DBContactData) -> Int64 {
 		if contact.rowId == 0 {
 			// insert
-			let insert = DBContactSchema.table.insert(
-				DBContactSchema.name <- contact.name,
-				DBContactSchema.email <- contact.email,
-				DBContactSchema.age <- contact.age
+			let insert = DBContactsSchema.table.insert(
+				DBContactsSchema.name <- contact.name,
+				DBContactsSchema.email <- contact.email,
+				DBContactsSchema.age <- contact.age
 			)
-			return try! db.run(insert)
+			guard let newRowId = try? db.run(insert) else {
+				print("saveContact: Error inserting row")
+				return 0
+			}
+			return newRowId
 		} else {
 			// update
-			let update = DBContactSchema.table.where(DBContactSchema.rowId == contact.rowId).update(
-				DBContactSchema.name <- contact.name,
-				DBContactSchema.email <- contact.email,
-				DBContactSchema.age <- contact.age
+			let update = DBContactsSchema.table.where(DBContactsSchema.rowId == contact.rowId).update(
+				DBContactsSchema.name <- contact.name,
+				DBContactsSchema.email <- contact.email,
+				DBContactsSchema.age <- contact.age
 			)
-			try! db.run(update)
-			return (db.changes > 0) ? contact.rowId : 0
+			guard let updatedRows = try? db.run(update) else {
+				print("saveContact: Error updating row")
+				return 0
+			}
+			return (updatedRows > 0) ? contact.rowId : 0
 		}
 	}
 	
 	func deleteContact(byId rowId: Int64) -> Bool {
-		let delete = DBContactSchema.table.where(DBContactSchema.rowId == rowId).delete()
-		try! db.run(delete)
-		return db.changes > 0
+		let delete = DBContactsSchema.table.where(DBContactsSchema.rowId == rowId).delete()
+		guard let deletedRows = try? db.run(delete) else {
+			print("deleteContact: Error deleting row")
+			return false
+		}
+		return deletedRows > 0
 	}
 }

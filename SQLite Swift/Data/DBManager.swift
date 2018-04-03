@@ -92,8 +92,11 @@ class DBManager {
 	*/
 	func getColumnNames(fromTable tableName: String) -> [String] {
 		var columnNames = [String]()
-		let sql = "PRAGMA table_info(" + tableName + ")"
-		for row in try! db.prepare(sql) {
+		guard let rows = try? db.prepare("PRAGMA table_info(" + tableName + ")") else {
+			print("Error getting table columns from " + tableName)
+			return columnNames
+		}
+		for row in rows {
 			if let colName = row[1] as? String {
 				columnNames.append(colName)
 			}
